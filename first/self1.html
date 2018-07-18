@@ -19,82 +19,83 @@
 		
 	</canvas>
 	<script>
-	    var ctx =document.getElementById("canvas"),
-	    content = ctx.getContext('2d'),
-	    WIDTH,
-	    HEIGHT,
-	    round=[],
-	    initRoundPopulation=70;
-
-	   
-
-
+		//first start
+	    var ctx =document.getElementById('canvas'),
+	    	content = ctx.getContext('2d'),
+	    	WIDTH,
+	    	HEIGHT,
+	    	rount=[],
+	    	initRoundPopulation=70;
 	    WIDTH = document.documentElement.clientWidth;
 	    HEIGHT = document.documentElement.clientHeight;
-
 	    ctx.width = WIDTH;
-	    ctx.height = HEIGHT;
+	    ctx.height=HEIGHT;
+	    //first end
 
-	    /**
-	    * Round_item  属性
-		* 闪耀的星星的需要哪些参数
-		*  圆 透明度 大小   index索引值
-	    **/
-	    function Round_item (index,x,y){
-	    	this.index = index ;
+
+	    //second start
+	    //工厂
+	    function Round_item(index,x,y){
+	    	//私有属性
+	    	this.index = index;
 	    	this.x=x;
 	    	this.y=y;
-	    	this.r=Math.random()*2+1;
-	    	//透明度的变化
-	    	var alpha = (Math.floor(Math.random()*10)+1)/10;
-	    	this.color = "rgba(255,255,255,"+alpha+")";
+	    	this.r = (Math.floor(Math.random()*10)+1)/10*3;
+	    	//透明度
+	    	var alpha=(Math.floor(Math.random()*10)+1)/10;
+	    	this.color = 'rgba(255,255,255,'+ alpha  +')';
 	    }
-	    /**绘画功能**/
+	    //second end 
+
+	    //third start
+	    //Round_item的绘画方法 继承
 	    Round_item.prototype.draw=function () {
-	    	content.fillStyle = this.color;
-	    	content.shadowBlur = this.r*2;
-	    	content.beginPath();
+	    	//canvas  API
+	    	content.fillStyle=this.color;//填充色
+	    	content.shadowBlur=this.r/2;//只有设置shadowColor属性值为不透明
+	    	content.beginPath();//开始绘制
 	    	content.arc(this.x,this.y,this.r,0,2*Math.PI,false);
 	    	content.closePath();
 	    	content.fill();
 	    }
+	    //third end
 
-	    /**animate效果
-		* move
-		* clearRect
-		* 也可以用递归
-	    **/
-	    function animate(){
-	    	content.clearRect(0,0,WIDTH,HEIGHT);
-	    	var length = round.length;
-	    	//遍历注意性能优化
-	    	for(var i=0;i<length;i++){
-	    		round[i].move();
-	    	};
-	    	//requestAnimationFrame 单次定时
-	    	requestAnimationFrame(animate);
-	    };
-	    /**
-		* move
-	    **/
-	    Round_item.prototype.move=function () {
+
+	    //forth start
+	    Round_item.prototype.move=function(){
+	    	//先修改高度
 	    	this.y -= 0.15;
-	    	if(this.y<=-10){
+	    	//
+	    	if( this.y <= -10 ){
 	    		this.y = HEIGHT+10;
 	    	}
+	    	//再调用draw
 	    	this.draw()
 	    }
+	    //forth  end
 
-	    /**鼠标移动事件**/
-
-
-	    /**初始化 星星个数**/
-	    function init() {
-	    	for(var i=0;i<initRoundPopulation;i++){
-				round[i] = new Round_item(i,Math.random()*WIDTH,Math.random()*HEIGHT);
-				round[i].draw();
+	    //fifth start
+	     function animate(){
+	     	//每一次开始都是重新渲染画布，所以在动画开始前清空画布
+	    	content.clearRect(0,0,WIDTH,HEIGHT);
+	    	var length = rount.length;
+	    	//遍历注意性能优化
+	    	for(var i=0;i<length;i++){
+	    		rount[i].move();
 	    	};
-	    	animate();
+	    	//requestAnimationFrame 单次定时  每秒60次调用callback
+	    	requestAnimationFrame(animate);
+	    };
+	    //fifth end
+
+	    //初始化 渲染到画布
+	    function init(){
+	    	//content.clearRect(0,0,WIDTH,HEIGHT);不需要这一步了
+	    	for( var i =0;i< initRoundPopulation;i++){
+	    		rount[i] = new Round_item(i,Math.random()*WIDTH,Math.random()*HEIGHT);
+	    		rount[i].draw()
+	    	}
+	    	animate()
 	    }
 	    init()
 	</script>
